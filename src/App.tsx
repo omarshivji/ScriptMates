@@ -10,7 +10,7 @@ export default function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm p-4 flex justify-between items-center border-b">
-        <h2 className="text-xl font-semibold accent-text">Focus Rooms</h2>
+        <h2 className="text-xl font-semibold accent-text">ScriptMates</h2>
         <SignOutButton />
       </header>
       <main className="flex-1 p-8">
@@ -90,7 +90,7 @@ function Content() {
           </p>
         </Authenticated>
         <Unauthenticated>
-          <p className="text-xl text-slate-600">Sign in to join focus rooms</p>
+          <p className="text-xl text-slate-600">Sign in to join breakrooms to complete tasks</p>
         </Unauthenticated>
       </div>
 
