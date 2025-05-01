@@ -16,6 +16,7 @@ import type {
 import type * as auth from "../auth.js";
 import type * as crons from "../crons.js";
 import type * as http from "../http.js";
+import type * as onlineUsers from "../onlineUsers.js";
 import type * as rooms from "../rooms.js";
 import type * as router from "../router.js";
 import type * as storage from "../storage.js";
@@ -34,6 +35,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   crons: typeof crons;
   http: typeof http;
+  onlineUsers: typeof onlineUsers;
   rooms: typeof rooms;
   router: typeof router;
   storage: typeof storage;

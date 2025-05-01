@@ -33,6 +33,25 @@ function Content({ isDarkMode }: { isDarkMode: boolean }) {
     }
   }, [rooms, loggedInUser]);
 
+  const setOnline = useMutation(api.onlineUsers.setOnline);
+
+  useEffect(() => {
+    if (!loggedInUser?._id) return;
+  
+    const name = loggedInUser.name ?? "Anonymous";  // ← fallback here
+  
+    // Ping immediately
+    setOnline({ userId: loggedInUser._id, name });
+  
+    // Ping every 30s
+    const interval = setInterval(() => {
+      setOnline({ userId: loggedInUser._id, name });
+    }, 30000);
+  
+    return () => clearInterval(interval);
+  }, [loggedInUser, setOnline]);
+  
+
   const handleJoin = async (roomId: Id<"rooms">) => {
     const task = taskInputs[roomId];
     if (!task?.trim()) {
@@ -214,25 +233,39 @@ export default function App() {
   return (
     <div className={isDarkMode ? 'dark' : ''}>
       <div className={`min-h-screen p-8 ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100'}`}>
-        <div className="max-w-6xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <button
-              onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`p-2 rounded-lg ${
-                isDarkMode 
-                  ? 'bg-gray-800 text-white' 
-                  : 'bg-white shadow-md'
-              }`}
-            >
-              {isDarkMode ? '🌞' : '🌙'}
-            </button>
-            <SignOutButton />
+        <div className="max-w-7xl mx-auto flex">
+          {/* Main Content */}
+          <div className="flex-1 pr-6">
+            <div className="flex justify-between items-center mb-8">
+              <button
+                onClick={() => setIsDarkMode(!isDarkMode)}
+                className={`p-2 rounded-lg ${
+                  isDarkMode 
+                    ? 'bg-gray-800 text-white' 
+                    : 'bg-white shadow-md'
+                }`}
+              >
+                {isDarkMode ? '🌞' : '🌙'}
+              </button>
+              <SignOutButton />
+            </div>
+            {loggedInUser ? (
+              <Content isDarkMode={isDarkMode} />
+            ) : (
+              <SignInForm />
+            )}
           </div>
-          {loggedInUser ? (
-            <Content isDarkMode={isDarkMode} />
-          ) : (
-            <SignInForm />
-          )}
+
+          {/* Side Panel */}
+          <div className="hidden md:block w-[220px] border-l border-gray-200 bg-white dark:bg-gray-800 dark:border-gray-700 p-4 overflow-y-auto">
+            <h3 className="font-bold mb-4 text-gray-800 dark:text-white">Online Users</h3>
+            {useQuery(api.onlineUsers.getOnlineUsers)?.map((user) => (
+              <div key={user.userId} className="flex items-center mb-3">
+                <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                <span className="text-gray-800 dark:text-gray-100">{user.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

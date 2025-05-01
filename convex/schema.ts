@@ -22,4 +22,12 @@ export default defineSchema({
     userId: v.id("users"),
     hasSeenWelcome: v.boolean(),
   }).index("by_user", ["userId"]),
+
+  onlineUsers: defineTable({
+    userId: v.id("users"),
+    name: v.string(),
+    lastSeen: v.number(), // store Unix timestamp
+  })
+    .index("by_userId", ["userId"])
+    .index("by_lastSeen", ["lastSeen"])
 });
