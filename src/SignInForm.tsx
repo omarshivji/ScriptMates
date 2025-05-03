@@ -67,6 +67,9 @@ export function SignInForm() {
       <button className="auth-button" onClick={() => void signIn("anonymous")}>
         Sign in anonymously
       </button>
+      <p className="mt-2 text-xs text-center text-red-500 font-medium">
+        Anonymous users cannot access the level up feature. Please register or sign in to earn XP and levels.
+      </p>
     </div>
   );
 }

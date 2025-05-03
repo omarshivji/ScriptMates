@@ -47,3 +47,17 @@ body {
 .link-text {
   @apply text-blue-500 hover:underline cursor-pointer font-medium;
 }
+
+.wallpaper-bg {
+  background: linear-gradient(135deg, #e0e7ff 0%, #fbc2eb 100%);
+  background-image: url('https://www.transparenttextures.com/patterns/diamond-upholstery.png');
+  background-size: auto, 300px 300px;
+  background-repeat: repeat;
+}
+
+.room-wallpaper-bg {
+  background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%);
+  background-image: url('https://www.transparenttextures.com/patterns/geometry2.png');
+  background-size: auto, 300px 300px;
+  background-repeat: repeat;
+}

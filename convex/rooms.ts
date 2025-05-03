@@ -92,6 +92,29 @@ export const leave = mutation({
     if (!room) throw new Error("Room not found");
 
     const participants = room.participants || [];
+    const leavingParticipant = participants.find(p => p.userId === userId);
+
+    // Only award XP if user is registered (not anonymous) and completed the timer
+    if (leavingParticipant) {
+      // Check if user is registered (not anonymous)
+      const user = await ctx.db.get(userId);
+      // Convex Auth: anonymous users have a 'tokenIdentifier' field
+      if (user && !('tokenIdentifier' in user)) {
+        // Calculate time spent in room
+        const joinTime = leavingParticipant.joinTime;
+        const now = Date.now();
+        const minsSpent = (now - joinTime) / 1000 / 60;
+        // If user stayed for the full duration (allow 1 min grace)
+        if (minsSpent >= room.duration - 1) {
+          // Award XP: 1 XP per min
+          const xpToAdd = Math.round(room.duration);
+          await ctx.db.patch(userId, {
+            xp: (user.xp || 0) + xpToAdd,
+          });
+        }
+      }
+    }
+
     await ctx.db.patch(args.roomId, {
       participants: participants.filter(p => p.userId !== userId),
     });

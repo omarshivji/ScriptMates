@@ -5,6 +5,13 @@ import { authTables } from "@convex-dev/auth/server";
 // Don't modify the auth tables - they're managed by Convex Auth
 export default defineSchema({
   ...authTables,
+  users: defineTable({
+    name: v.optional(v.string()),
+    xp: v.optional(v.number()),
+    image: v.optional(v.string()),
+    email: v.optional(v.string()),
+    isAnonymous: v.optional(v.boolean()),
+  }),
   rooms: defineTable({
     name: v.string(),
     duration: v.float64(),
@@ -29,5 +36,5 @@ export default defineSchema({
     lastSeen: v.number(), // store Unix timestamp
   })
     .index("by_userId", ["userId"])
-    .index("by_lastSeen", ["lastSeen"])
+    .index("by_lastSeen", ["lastSeen"]),
 });

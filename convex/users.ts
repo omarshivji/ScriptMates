@@ -34,3 +34,29 @@ export const getProfile = query({
     };
   },
 });
+
+export const setName = mutation({
+  args: { name: v.string() },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+    await ctx.db.patch(userId, { name: args.name });
+    // Also update onlineUsers table if present
+    const online = await ctx.db
+      .query("onlineUsers")
+      .withIndex("by_userId", q => q.eq("userId", userId))
+      .unique();
+    if (online) {
+      await ctx.db.patch(online._id, { name: args.name });
+    }
+  },
+});
+
+export const setAvatar = mutation({
+  args: { url: v.string() },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (!userId) throw new Error("Not authenticated");
+    await ctx.db.patch(userId, { image: args.url });
+  },
+});
